@@ -1,0 +1,315 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.window {
+    position: absolute;
+    width: 1200px;
+    height: 900px;
+    overflow: hidden;
+    box-shadow: 0 40px 60px rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    z-index: 1;
+}
+.window.active {
+    z-index: 9999; /* 激活的窗口置顶 */
+    box-shadow: 0 50px 70px rgba(0, 0, 0, 0.5); /* 提升感 */
+}
+
+.title-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    height: 32px;
+    border-bottom: 1px solid #ccc;
+    backdrop-filter: blur(20px);
+    background-color: rgba(230, 230, 230, 0.7);
+    border-radius: 10px;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.button {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.button::after {
+    content: '';
+    position: absolute;
+    top: -10px; /* 向外扩展点击区域 */
+    left: -10px;
+    width: 32px; /* 点击区域宽度 */
+    height: 32px; /* 点击区域高度 */
+    background: transparent; /* 背景透明，不影响外观 */
+    border-radius: 50%;
+    z-index: -1; /* 保持在下层，不遮挡其他内容 */
+}
+
+
+.button.red {
+    background-color: #ff5f57;
+}
+
+.button.yellow {
+    background-color: #ffbd2e;
+}
+
+.button.green {
+    background-color: #28c840;
+}
+
+.title {
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    flex: 1;
+    user-select: none;
+    margin-left: -100px;
+}
+
+.content {
+    padding: 16px;
+    color: #333;
+}
+
+.resize-handle {
+    position: absolute;
+    background-color: transparent;
+    z-index: 10;
+}
+
+/* 角手柄 */
+.resize-handle.top-left,
+.resize-handle.bottom-right {
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+}
+
+
+.resize-handle.top-right,
+.resize-handle.bottom-left{
+    width: 16px;
+    height: 16px;
+    cursor: nesw-resize;
+}
+
+/* 边手柄 */
+.resize-handle.top,
+.resize-handle.bottom {
+    height: 8px;
+    width: 100%;
+    cursor: ns-resize;
+}
+
+.resize-handle.left,
+.resize-handle.right {
+    width: 8px;
+    height: 100%;
+    cursor: ew-resize;
+}
+
+/* 定位 */
+.resize-handle.top {
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.resize-handle.bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.resize-handle.left {
+    top: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.resize-handle.right {
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.resize-handle.top-left {
+    top: 0;
+    left: 0;
+}
+
+.resize-handle.top-right {
+    top: 0;
+    right: 0;
+}
+
+.resize-handle.bottom-left {
+    bottom: 0;
+    left: 0;
+}
+
+.resize-handle.bottom-right {
+    bottom: 0;
+    right: 0;
+}
+ 
+.input-box {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh; /* 高度为窗口的1/4 */
+    padding: 10px;
+    background-color: rgba(249, 249, 249, 0.8); /* 设置背景为80%不透明 */
+    border-top: 1px solid #ccc;
+    display: flex;
+    flex-direction: column; /* 使用列布局，将内容垂直排列 */
+    align-items: flex-start; /* 将内容对齐到左边 */
+    justify-content: flex-start; /* 内容从顶部开始排列 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.608);
+}
+
+#chat-input {
+    width: 100%; /* 占据输入框宽度 */
+    padding: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical; /* 允许垂直调整 */
+    min-height: 32px;
+    max-height: 150px; /* 设置最大高度 */
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background-color: rgba(249, 249, 249, 0.8); /* 设置输入框背景为80%不透明 */
+}
+
+
+.resize-handle.input {
+    width: 100%;
+    height: 1.5px;
+    cursor: ns-resize;
+    background-color: #ddd;
+    position: absolute;
+    top: 0;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    backdrop-filter: blur(20px);
+    background-color: rgba(51, 51, 51, 0.7);
+    border-radius: 10px;
+    color: white;
+    padding: 10px;
+    z-index: 1000;
+    box-shadow: 0 40px 60px rgba(0, 0, 0, 0.38);
+}
+
+
+.window-tabs {
+    margin-top: 20px;
+}
+
+.window-tab {
+    padding: 10px;
+    background-color: #444;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+}
+
+.window-tab:hover {
+    background-color: #555;
+}
+
+/* 窗口缩小时的动画 */
+@keyframes minimizeAnimation {
+    0% {
+        transform: scale(1);  /* 初始大小 */
+        opacity: 1;  /* 初始透明度 */
+    }
+    100% {
+        transform: scale(0.1);  /* 最小化时缩小 */
+        opacity: 0;  /* 最小化时透明 */
+    }
+}
+
+/* 恢复窗口时的动画 */
+@keyframes restoreAnimation {
+    0% {
+        transform: scale(0.1);  /* 从很小的大小开始 */
+        opacity: 0;  /* 初始透明度为0 */
+    }
+    100% {
+        transform: scale(1);  /* 恢复到正常大小 */
+        opacity: 1;  /* 完全显示 */
+    }
+}
+
+/* 应用缩放和透明度动画 */
+.window.minimized {
+    animation: minimizeAnimation 0.5s forwards;
+}
+
+.window.restored {
+    animation: restoreAnimation 0.5s forwards;
+}
+
+.window.maximized {
+    position: fixed;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.window.closing {
+    animation: minimizeAnimation 0.5s forwards;
+}
+
+.window.normal {
+    transition: all 0.5s ease;
+}
+
+.add-window-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    margin: 10px auto;
+    background-color: #4caf50;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-window-button:hover {
+    background-color: #45a049;
+}
